@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diploma Admin Panel</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+#admin-panel { display: none; }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table, th, td {
+    border: 1px solid #ccc;
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+}
+
+button.delete-btn {
+    background: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+h3 {
+    margin-top: 30px;
+    color: #333;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= LOGIN ================= -->
+<div id="login-container">
+    <h2>Admin Login</h2>
+    <form id="login-form">
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button type="submit">Login</button>
+    </form>
+    <p id="login-error" style="color:red;"></p>
+</div>
+
+<!-- ================= ADMIN PANEL ================= -->
+<div id="admin-panel">
+
+    <h1>Diploma Admin Panel</h1>
+
+    <!-- ================= DIPLOMA ================= -->
+    <h2>Add Diploma</h2>
+
+    <form id="diploma-form">
+        <input type="text" id="diploma-title" placeholder="Diploma Title" required>
+        <input type="number" id="available-seats" placeholder="Available Seats" required>
+        <input type="number" id="total-seats" placeholder="Total Seats" required>
+        <input type="text" id="course-duration" placeholder="Course Duration" required>
+        <button type="submit">Add Diploma</button>
+    </form>
+
+    <h2>Diploma List</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Available</th>
+                <th>Total</th>
+                <th>Duration</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="diploma-table-body"></tbody>
+    </table>
+
+    <!-- ================= STAFF ================= -->
+    <h2>Staff Management</h2>
+
+    <form id="staff-form">
+        <input type="text" id="staff-name" placeholder="Staff Name" required>
+
+        <select id="staff-type">
+            <option value="Teaching">Teaching</option>
+            <option value="Non-Teaching">Non-Teaching</option>
+        </select>
+
+        <input type="text" id="staff-department" placeholder="Department (Computer, Civil...)" required>
+
+        <select id="staff-role">
+            <option value="Staff">Staff</option>
+            <option value="HOD">Head of Department</option>
+        </select>
+
+        <button type="submit">Add Staff</button>
+    </form>
+
+    <!-- Department Tables -->
+    <div id="department-tables"></div>
+
+</div>
+
+<script>
+// ================= LOGIN =================
+const ADMIN_USERNAME = "PLITMS";
+const ADMIN_PASSWORD = "plitms123";
+
+const loginForm = document.getElementById('login-form');
+const adminPanel = document.getElementById('admin-panel');
+const loginContainer = document.getElementById('login-container');
+const errorText = document.getElementById('login-error');
+
+loginForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+        loginContainer.style.display = "none";
+        adminPanel.style.display = "block";
+        loadDiplomas();
+        loadStaff(); // ✅ NEW
+    } else {
+        errorText.textContent = "Invalid login credentials!";
+    }
+});
+
+// ================= DIPLOMA =================
+const form = document.getElementById("diploma-form");
+const tableBody = document.getElementById("diploma-table-body");
+
+form.addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const title = document.getElementById("diploma-title").value;
+    const availableSeats = document.getElementById("available-seats").value;
+    const totalSeats = document.getElementById("total-seats").value;
+    const duration = document.getElementById("course-duration").value;
+
+    let diplomas = JSON.parse(localStorage.getItem("diplomas")) || [];
+
+    diplomas.push({ title, availableSeats, totalSeats, duration });
+
+    localStorage.setItem("diplomas", JSON.stringify(diplomas));
+
+    form.reset();
+    loadDiplomas();
+});
+
+function loadDiplomas() {
+    tableBody.innerHTML = "";
+
+    let diplomas = JSON.parse(localStorage.getItem("diplomas")) || [];
+
+    diplomas.forEach((d, index) => {
+        tableBody.innerHTML += `
+            <tr>
+                <td>${d.title}</td>
+                <td>${d.availableSeats}</td>
+                <td>${d.totalSeats}</td>
+                <td>${d.duration}</td>
+                <td>
+                    <button class="delete-btn" onclick="deleteDiploma(${index})">Delete</button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+function deleteDiploma(index) {
+    let diplomas = JSON.parse(localStorage.getItem("diplomas")) || [];
+    diplomas.splice(index, 1);
+    localStorage.setItem("diplomas", JSON.stringify(diplomas));
+    loadDiplomas();
+}
+
+// ================= STAFF =================
+const staffForm = document.getElementById("staff-form");
+const departmentContainer = document.getElementById("department-tables");
+
+staffForm.addEventListener("submit", function(e){
+    e.preventDefault();
+
+    const name = document.getElementById("staff-name").value;
+    const type = document.getElementById("staff-type").value;
+    const department = document.getElementById("staff-department").value;
+    const role = document.getElementById("staff-role").value;
+
+    let staffList = JSON.parse(localStorage.getItem("staff")) || [];
+
+    // Only one HOD per department
+    if(role === "HOD"){
+        staffList = staffList.filter(s => !(s.department === department && s.role === "HOD"));
+    }
+
+    staffList.push({name, type, department, role});
+
+    localStorage.setItem("staff", JSON.stringify(staffList));
+
+    staffForm.reset();
+    loadStaff();
+});
+
+function loadStaff(){
+
+    let staffList = JSON.parse(localStorage.getItem("staff")) || [];
+
+    if(staffList.length === 0){
+        departmentContainer.innerHTML = "<p>No staff added</p>";
+        return;
+    }
+
+    let departments = {};
+
+    staffList.forEach(s=>{
+        if(!departments[s.department]){
+            departments[s.department] = [];
+        }
+        departments[s.department].push(s);
+    });
+
+    let html = "";
+
+    for(let dept in departments){
+
+        html += `
+        <h3>${dept} Department</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Role</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+        `;
+
+        departments[dept].forEach((s,index)=>{
+            html += `
+            <tr>
+                <td>${s.name}</td>
+                <td>${s.type}</td>
+                <td style="color:${s.role==="HOD" ? "green" : "black"}">
+                    ${s.role}
+                </td>
+                <td>
+                    <button class="delete-btn" onclick="deleteStaff(${index})">Delete</button>
+                </td>
+            </tr>
+            `;
+        });
+
+        html += `</tbody></table>`;
+    }
+
+    departmentContainer.innerHTML = html;
+}
+
+function deleteStaff(index){
+    let staffList = JSON.parse(localStorage.getItem("staff")) || [];
+    staffList.splice(index,1);
+    localStorage.setItem("staff", JSON.stringify(staffList));
+    loadStaff();
+}
+</script>
+
+</body>
+</html><button onclick="resetLogin()">Reset Login</button>
+
+<script>
+function resetLogin(){
+    if(confirm("Reset login data only?")){
+
+        // REMOVE ONLY LOGIN DATA
+        localStorage.removeItem("user");
+        localStorage.removeItem("role");
+        localStorage.removeItem("userProfile");
+
+        alert("Login reset successful!");
+
+        // REDIRECT TO LOGIN PAGE
+        window.location.href = "index.html";
+    }
+}
+</script>

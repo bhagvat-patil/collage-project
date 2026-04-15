@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - PLITMS</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        header {
+            position: relative;
+        }
+
+        .logo-img {
+            width: 120px;
+            display: block;
+            margin: 10px auto;
+        }
+
+        /* SETTINGS ICON */
+        .settings-icon {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        /* SETTINGS PANEL */
+        .settings-box {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 20px;
+            border: 1px solid #ccc;
+            padding: 15px;
+            width: 250px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+
+        .settings-box input {
+            width: 100%;
+            margin: 5px 0;
+            padding: 8px;
+        }
+
+        .settings-box button {
+            margin-top: 10px;
+            padding: 8px;
+            width: 100%;
+            background: green;
+            color: white;
+            border: none;
+        }
+
+        .gallery img {
+            width: 100%;
+            max-width: 300px;
+            margin: 10px;
+            border-radius: 10px;
+        }
+
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <!-- SETTINGS ICON -->
+    <div class="settings-icon" onclick="toggleSettings()">⚙️</div>
+
+    <!-- SETTINGS PANEL -->
+    <div class="settings-box" id="settingsBox">
+        <input type="text" id="name" placeholder="Your Name">
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="saveProfile()">Save</button>
+    </div>
+
+    <!-- LOGO -->
+    <img src="https://www.plit.ac.in/images/logo.png" class="logo-img">
+
+    <h1>Welcome to PLITMS</h1>
+
+    <nav>
+        <ul>
+            <li><a href="index.html">Login</a></li>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="diploma.html">Diploma</a></li>
+            <li><a href="diploma-admin.html">Diploma Admin</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+
+    <section>
+        <h2>About PLITMS</h2>
+        <p>
+            Pankaj Laddhad Institute of Technology & Management Studies (PLITMS) is located in Buldhana, Maharashtra.
+        </p>
+    </section>
+
+    <section>
+        <h2>PLITMS Campus</h2>
+        <div class="gallery">
+            <img src="https://assets.allegiance-educare.com/colleges/1421051113142100580014147556106.JPG">
+            <img src="https://www.collegebatch.com/static/clg-gallery/pankaj-laddhad-institute-of-technology-management-studies-buldhana-286658.webp">
+            <img src="https://assets.allegiance-educare.com/colleges/14210511131421005800pankaj_laddhad_%5B640x480%5D.jpg">
+        </div>
+    </section>
+
+    <section>
+        <h2>Facilities</h2>
+        <ul>
+            <li>📚 Library</li>
+            <li>💻 Labs</li>
+            <li>🏫 Campus</li>
+            <li>🏀 Sports</li>
+            <li>🏠 Hostel</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Key Features</h2>
+        <ul>
+            <li>✔ Secure Login</li>
+            <li>✔ JARVIS Dashboard</li>
+            <li>✔ Diploma System</li>
+            <li>✔ Admin Panel</li>
+        </ul>
+    </section>
+
+</main>
+
+<footer>
+    <p>&copy; 2026 PLITMS. All rights reserved.</p>
+</footer>
+
+<script>
+// TOGGLE SETTINGS PANEL
+function toggleSettings() {
+    const box = document.getElementById("settingsBox");
+    box.style.display = (box.style.display === "block") ? "none" : "block";
+}
+
+// SAVE PROFILE
+function saveProfile() {
+    const name = document.getElementById("name").value;
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    const user = { name, username, password };
+
+    localStorage.setItem("userProfile", JSON.stringify(user));
+
+    alert("Profile Saved!");
+}
+
+// LOAD PROFILE
+window.onload = function () {
+    const user = JSON.parse(localStorage.getItem("userProfile"));
+
+    if (user) {
+        document.getElementById("name").value = user.name;
+        document.getElementById("username").value = user.username;
+        document.getElementById("password").value = user.password;
+    }
+};
+</script>
+
+</body>
+</html><script src="js/auth.js"></script>
+
+<script>
+const user = localStorage.getItem("user");
+const role = localStorage.getItem("role");
+
+// SHOW USER
+if(user){
+    const div = document.createElement("div");
+    div.innerHTML = "Welcome " + user + " (" + role + ")";
+    div.style.textAlign = "center";
+    document.body.prepend(div);
+}
+
+// HIDE ADMIN
+if(role !== "admin"){
+    const adminLink = document.querySelector('a[href="diploma-admin.html"]');
+    if(adminLink) adminLink.style.display="none";
+}
+</script><script src="js/auth.js"></script>
+
+<script>
+const role = localStorage.getItem("role");
+
+// HIDE ADMIN MENU
+if(role !== "admin"){
+    const adminLink = document.getElementById("adminLink");
+    if(adminLink) adminLink.remove();
+}
+
+// SHOW USER INFO
+const user = localStorage.getItem("user");
+if(user){
+    const div = document.createElement("div");
+    div.innerHTML = "Welcome " + user + " (" + role + ")";
+    div.style.textAlign = "center";
+    document.body.prepend(div);
+}
+</script>

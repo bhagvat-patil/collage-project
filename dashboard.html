@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PLITMS JARVIS</title>
+
+<link rel="stylesheet" href="css/jarvis.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+<header class="top">
+    <div class="logo">
+        PLITMS<br>
+        <small>Pankaj Laddhad Institute of Technology</small>
+    </div>
+
+    <div class="right">
+        <span id="adminBadge" style="display:none;">ADMIN</span>
+
+        <select onchange="setLang(this.value)">
+            <option value="en">EN</option>
+            <option value="hi">HI</option>
+            <option value="mr">MR</option>
+        </select>
+
+        <i class="fa fa-user"></i>
+    </div>
+</header>
+
+<div class="layout">
+
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <a href="#" onclick="goHome()">Home</a>
+        <a href="diploma.html">Diploma Info</a>
+        <a href="chatbot.html">Chatbot</a>
+        <a href="#" onclick="logout()">Logout</a>
+    </nav>
+
+    <!-- Main -->
+    <main>
+        <h1 id="welcome">Welcome to JARVIS</h1>
+
+        <!-- Voice Button -->
+        <div class="jarvis-core" onclick="listen()">
+            <div class="ring r1"></div>
+            <div class="ring r2"></div>
+            <div class="ring r3"></div>
+            <i class="fa fa-microphone"></i>
+        </div>
+
+        <!-- Animation -->
+        <div class="waveform">
+            <span></span><span></span><span></span><span></span><span></span>
+        </div>
+
+        <!-- Output -->
+        <p id="output">Click mic and speak...</p>
+    </main>
+
+</div>
+
+<script src="js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PLITMS Login</title>
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="bg">
+
+<div class="login-box">
+
+    <h1 id="title">JARVIS Login</h1>
+
+    <!-- Language Selector -->
+    <select id="langSelect">
+        <option value="en">English</option>
+        <option value="hi">हिंदी</option>
+        <option value="mr">मराठी</option>
+    </select>
+
+    <!-- Inputs -->
+    <input id="username" type="text" placeholder="Username">
+    <input id="password" type="password" placeholder="Password">
+
+    <!-- Role -->
+    <select id="role">
+        <option value="user">Student</option>
+        <option value="admin">Admin</option>
+    </select>
+
+    <!-- Button -->
+    <button onclick="login()" id="loginBtn">Login</button>
+
+</div>
+
+<!-- LOGIN SCRIPT -->
+<script>
+function login(){
+
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const role = document.getElementById("role").value;
+
+    // ================= ADMIN LOGIN =================
+    if(role === "admin"){
+
+        if(username === "PLITMS" && password === "plitms123"){
+            localStorage.setItem("user", username);
+            localStorage.setItem("role", "admin");
+
+            alert("Admin Login Successful");
+            window.location.href = "home.html";
+        }
+        else{
+            alert("Invalid Admin Username or Password");
+        }
+
+        return;
+    }
+
+    // ================= STUDENT LOGIN =================
+    if(role === "user"){
+
+        if(!username){
+            alert("Please enter username");
+            return;
+        }
+
+        localStorage.setItem("user", username);
+        localStorage.setItem("role", "user");
+
+        alert("Student Login Successful");
+        window.location.href = "home.html";
+    }
+}
+</script>
+
+</body>
+</html>

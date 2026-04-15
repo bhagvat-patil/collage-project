@@ -1,0 +1,99 @@
+<<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diploma - PLITMS</title>
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Diploma</h1>
+    <nav>
+        <ul>
+            <li><a href="home.html">Home</a></li>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="diploma-admin.html">Admin Panel</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <section>
+        <h2>PLITMS Diplomas</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Diploma Title</th>
+                    <th>Available Seats</th>
+                    <th>Total Seats</th>
+                    <th>Course Duration</th>
+                </tr>
+            </thead>
+            <tbody id="diploma-table-body"></tbody>
+        </table>
+
+    </section>
+
+    <button id="refresh-diploma">Refresh Diplomas</button>
+</main>
+
+<footer>
+    <p>&copy; 2026 PLITMS. All rights reserved.</p>
+</footer>
+
+<script>
+const tableBody = document.getElementById("diploma-table-body");
+
+// LOAD ONLY ADMIN DATA
+function loadDiplomas() {
+    tableBody.innerHTML = "";
+
+    let diplomas = JSON.parse(localStorage.getItem("diplomas")) || [];
+
+    if (diplomas.length === 0) {
+        tableBody.innerHTML = "<tr><td colspan='4'>No diplomas available</td></tr>";
+        return;
+    }
+
+    diplomas.forEach(d => {
+        let row = `
+            <tr>
+                <td>${d.title}</td>
+                <td>${d.availableSeats}</td>
+                <td>${d.totalSeats}</td>
+                <td>${d.duration}</td>
+            </tr>
+        `;
+        tableBody.innerHTML += row;
+    });
+}
+
+// Refresh button
+document.getElementById("refresh-diploma").addEventListener("click", loadDiplomas);
+
+// Auto load
+loadDiplomas();
+</script>
+
+</body>
+</html>
